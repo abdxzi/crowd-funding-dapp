@@ -12,8 +12,8 @@ export default defineConfig({
       '@assets': '/src/assets',
       '@constants': '/src/constants',
       '@pages': '/src/pages',
-      // '@utils': '/src/utils',
-      // '@context': '/src/context',
+      '@utils': '/src/utils',
+      '@context': '/src/context',
       // Add more aliases as needed
     },
   },

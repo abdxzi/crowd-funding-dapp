@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { money } from '@assets/index';
-import { 
-  CustomButton, 
-  FormField, 
-  Loader 
-} from '@components/index';
-import { 
-  checkIfImage, 
-  pinJson,
+import { ethers } from 'ethers';
+
+import { useWeb3ModalAccount } from '@web3modal/ethers/react';
+
+// import { useStateContext } from '../context';
+import { money } from '../assets';
+import { CustomButton, FormField, Loader } from '../components';
+import { checkIfImage } from '../utils';
+import { pinJson } from '../utils/pinata';
+import {
   getCamapaignList,
   createCampaignFcn
-} from '@utils/index';
-
+} from '../utils/contract';
 import { useNetworkContext } from "@context/index";
 import { toast } from 'react-hot-toast';
 
@@ -26,11 +26,13 @@ const CreateCampaign = () => {
     isConnected,
     chainId,
     provider,
+    signer
   } = useNetworkContext()
 
+  // const { createCampaign } = useStateContext();
   const [form, setForm] = useState({
-    owner: '',
-    title: '',
+    name: '',
+    title: '=',
     description: '',
     target: '',
     deadline: '',
@@ -41,7 +43,12 @@ const CreateCampaign = () => {
     setForm({ ...form, [fieldName]: e.target.value })
   }
 
+  const _create = async () => {
+    
+  }
+
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     if(!isConnected) {
@@ -49,38 +56,37 @@ const CreateCampaign = () => {
       return;
     }
 
-    try {
-      const imageExists = await checkIfImage(form.image);
-      if (!imageExists) throw Error("Provide valid image URL");
+    console.log("Form");
 
+    const imageExists = checkIfImage(form.image);
+
+    if (imageExists) {
       setIsLoading(true);
 
       //  Create Campaign Here
-      const now = new Date()
-      const metadata = {
-        ...form,
-        ownerAddress: address,
-        startDate: now.toISOString().split('T')[0]
-      }
+      // pinJson(form)
 
-      const ipfs = await pinJson(metadata);
-      if(!ipfs.IpfsHash) throw Error("Metadata upload failed !")
-
-      await createCampaignFcn(provider, ipfs.IpfsHash);
-      console.log(ipfs.IpfsHash);
+      // console.log(provider);
+      await createCampaignFcn(provider, "http://localhost:5173/json/1.json");
+      await getCamapaignList();
 
       setIsLoading(false);
-      // navigate('/');
-    } catch (e) {
-      toast.error(e.message);
+      navigate('/');
+    } else {
+      toast.error('Provide valid image URL')
+      setForm({ ...form, image: '' });
     }
+  }
+
+  const testFcn = ()=> {
+    console.log("Test")
   }
 
   return (
     <div className="bg-[#1c1c24] flex justify-center items-center flex-col rounded-[10px] sm:p-10 p-4">
       {isLoading && <Loader />}
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">
-        <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">Start a Campaign</h1>
+        <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">Edit your Campaign</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="w-full mt-[65px] flex flex-col gap-[30px]">
@@ -89,8 +95,8 @@ const CreateCampaign = () => {
             labelName="Your Name *"
             placeholder="John Doe"
             inputType="text"
-            value={form.owner}
-            handleChange={(e) => handleFormFieldChange('owner', e)}
+            value={form.name}
+            handleChange={(e) => handleFormFieldChange('name', e)}
           />
           <FormField
             labelName="Campaign Title *"
@@ -108,11 +114,6 @@ const CreateCampaign = () => {
           value={form.description}
           handleChange={(e) => handleFormFieldChange('description', e)}
         />
-
-        <div className="w-full flex justify-start items-center p-4 bg-[#8c6dfd] h-[120px] rounded-[10px]">
-          <img src={money} alt="money" className="w-[40px] h-[40px] object-contain" />
-          <h4 className="font-epilogue font-bold text-[25px] text-white ml-[20px]">You will get 100% of the raised amount</h4>
-        </div>
 
         <div className="flex flex-wrap gap-[40px]">
           <FormField
@@ -142,7 +143,7 @@ const CreateCampaign = () => {
         <div className="flex justify-center items-center mt-[40px]">
           <CustomButton
             btnType="submit"
-            title="Submit new campaign"
+            title="Update Campaign Data"
             styles="bg-[#1dc071]"
             disabled={isLoading}
           />

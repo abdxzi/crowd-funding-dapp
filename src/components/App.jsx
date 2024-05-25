@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Sidebar, Navbar } from '@components';
-import { CampaignDetails, CreateCampaign, Home, Profile } from '@pages';
+import { CampaignDetails, CreateCampaign, Home, Profile, EditCreateCampaign } from '@pages/index';
 
 // WEB3MODAL
 import { modalConfig } from '@config'

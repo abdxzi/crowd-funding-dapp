@@ -13,6 +13,7 @@ import menu from './images/menu.svg';
 import money from './images/money.svg';
 import loader from './images/loader.svg';
 import thirdweb from './images/thirdweb.png';
+import settings from './images/settings.svg'
 
 export {
   tagType,
@@ -29,4 +30,5 @@ export {
   money,
   loader,
   thirdweb,
+  settings
 };

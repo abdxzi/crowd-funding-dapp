@@ -8,7 +8,8 @@
         "@config/*": ["src/config/*"],
         "@assets/*": ["src/assets/*"],
         "@pages/*": ["src/pages/*"],
-        // "@context/*": ["/src/context/*"],
+        "@context/*": ["/src/context/*"],
+        "@utils/*": ["/src/utils/*"],
         // Add more aliases as needed
       }
     },

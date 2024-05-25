@@ -1,29 +1,31 @@
 import React, { useState, useEffect } from 'react'
 
 import { DisplayCampaigns } from '../components';
-// import { useStateContext } from '../context'
+import { 
+  getCamapaignList,
+  getJson
+} from '@utils/index';
+// import {  } from 'src/utils/pinata';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [campaigns, setCampaigns] = useState([]);
 
-  // const { address, contract, getCampaigns } = useStateContext();
-  const address = false;
-  const contract = false;
-
   const fetchCampaigns = async () => {
     setIsLoading(true);
-    // const data = await getCampaigns();
-    // setCampaigns(data);
+
+    const campaign_list = await getCamapaignList();
+    const json = await getJson(campaign_list);
+    setCampaigns(json);
     setIsLoading(false);
   }
 
   useEffect(() => {
-    if(contract) fetchCampaigns();
-  }, [address, contract]);
+    fetchCampaigns();
+  }, []);
 
   return (
-    <DisplayCampaigns 
+    <DisplayCampaigns
       title="All Campaigns"
       isLoading={isLoading}
       campaigns={campaigns}

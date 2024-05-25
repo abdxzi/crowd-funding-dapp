@@ -1,3 +1,6 @@
+import { pinJson, getJson } from "./pinata";
+import { getCamapaignList, createCampaignFcn } from "./contract";
+
 export const daysLeft = (deadline) => {
   const difference = new Date(deadline).getTime() - Date.now();
   const remainingDays = difference / (1000 * 3600 * 24);
@@ -11,12 +14,18 @@ export const calculateBarPercentage = (goal, raisedAmount) => {
   return percentage;
 };
 
-export const checkIfImage = (url, callback) => {
-  const img = new Image();
-  img.src = url;
-
-  if (img.complete) callback(true);
-
-  img.onload = () => callback(true);
-  img.onerror = () => callback(false);
+export const checkIfImage = async (url) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = url;
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+  });
 };
+
+export {
+  pinJson,
+  createCampaignFcn,
+  getCamapaignList,
+  getJson
+}

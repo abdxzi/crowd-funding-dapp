@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ethers } from 'ethers';
 
-// import { useStateContext } from '../context';
 import { CountBox, CustomButton, Loader } from '../components';
 import { calculateBarPercentage, daysLeft } from '../utils';
 import { thirdweb } from '../assets';
+
+import {
+  getCamapaignList,
+  createCampaignFcn
+} from '../utils/contract';
 
 const CampaignDetails = () => {
   const { state } = useLocation();
@@ -19,8 +22,8 @@ const CampaignDetails = () => {
   const remainingDays = daysLeft(state.deadline);
 
 
-  const contract = false;
-  const address = false;
+  const contract = true;
+  const address = true;
 
   const fetchDonators = async () => {
     // const data = await getDonations(state.pId);

@@ -18,4 +18,4 @@ const metadata = {
 // Create Ethers config
 export const ethersConfig = defaultConfig({
   metadata,
-})
+});

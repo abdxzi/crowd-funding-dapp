@@ -1,0 +1,27 @@
+[
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "by",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "campaign_id",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "cid",
+                "type": "string"
+            }
+        ],
+        "name": "CampaignCreated",
+        "type": "event"
+    }
+]

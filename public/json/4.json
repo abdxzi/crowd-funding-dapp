@@ -1,0 +1,9 @@
+{
+  "name": "Campaign #4",
+  "title":"Fundraise",
+  "description": "The great description",
+  "target": "2",
+  "deadline": "2025-05-21",
+  "image": "http://localhost:5173/images/1.png",
+  "createdBy": "Azeez 4"
+}

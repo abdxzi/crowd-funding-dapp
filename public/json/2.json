@@ -1,0 +1,20 @@
+{
+  "owner": "Campaign #2",
+  "title":"Fundraise",
+  "description": "The great description",
+  "target": "20",
+  "deadline": "2025-05-21",
+  "image": "http://localhost:5173/images/1.png",
+  "createdBy": "Azeez 2"
+}
+
+{
+  "owner": "Azeez",
+  "title": "Green Farm 3",
+  "description": "A wonderful android game",
+  "target": "20",
+  "deadline": "2024-06-02",
+  "amountCollected": "4",
+  "image": "https://i.ytimg.com/vi/Heu1V9DNO7o/maxresdefault.jpg",
+  "ownerAddress: "sc"
+}

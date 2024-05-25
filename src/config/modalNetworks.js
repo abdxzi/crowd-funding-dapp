@@ -19,24 +19,25 @@ const mainnet = {
 //     rpcUrl: 'https://rpc-amoy.polygon.technology'
 // }
 
-// const sepolia = {
-//     chainId: 11155111,
-//     name: 'Sepolia',
-//     currency: 'ETH',
-//     explorerUrl: 'https://sepolia.etherscan.io',
-//     rpcUrl: 'https://rpc-sepolia.rockx.com'
-// }
+const sepolia = {
+    chainId: 11155111,
+    name: 'Sepolia',
+    currency: 'ETH',
+    explorerUrl: 'https://sepolia.etherscan.io',
+    rpcUrl: 'https://rpc-sepolia.rockx.com'
+}
 
-// const hardhat = {
-//     chainId: 1337,
-//     name: 'hardhat',
-//     currency: 'ETH',
-//     explorerUrl: '',
-//     rpcUrl: 'http://127.0.0.1:8545'
-// }
+const hardhat = {
+    chainId: 31337,
+    name: 'hardhat',
+    currency: 'ETH',
+    explorerUrl: '',
+    rpcUrl: 'http://127.0.0.1:8545'
+}
 
 export const networks = [
     mainnet, 
     // polygonAmoy, 
-    // sepolia, hardhat
+    // sepolia, 
+    hardhat
 ]

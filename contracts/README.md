@@ -11,3 +11,8 @@ REPORT_GAS=true npx hardhat test
 npx hardhat node
 npx hardhat ignition deploy ./ignition/modules/Lock.js
 ```
+
+
+## Contract Deployed
+
+Sepolia `0xc0BeC168bc835dc4cbE43948C4523987CF873e31`
