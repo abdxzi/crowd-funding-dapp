@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react'
 import { DisplayCampaigns } from '../components';
 import { 
   getCamapaignList,
-  getJson
+  getCamapignData, 
+  getAmountCollected
 } from '@utils/index';
-// import {  } from 'src/utils/pinata';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,10 +15,15 @@ const Home = () => {
     setIsLoading(true);
 
     const campaign_list = await getCamapaignList();
-    const json = await getJson(campaign_list);
-    setCampaigns(json);
+
+    const raisedAmount = await getAmountCollected(campaign_list);
+    const metadata = await getCamapignData(campaign_list, raisedAmount);
+
+    setCampaigns(metadata);
     setIsLoading(false);
   }
+  
+  console.log(campaigns)
 
   useEffect(() => {
     fetchCampaigns();

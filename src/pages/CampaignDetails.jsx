@@ -6,14 +6,16 @@ import { calculateBarPercentage, daysLeft } from '../utils';
 import { thirdweb } from '../assets';
 
 import {
-  getCamapaignList,
-  createCampaignFcn
-} from '../utils/contract';
+  fetchDonors,
+  donate,
+  amountOf
+} from '@utils/index';
+import { useNetworkContext } from '@context/index';
+import { toast } from 'react-hot-toast';
 
 const CampaignDetails = () => {
   const { state } = useLocation();
-  const navigate = useNavigate();
-  // const { donate, getDonations, contract, address } = useStateContext();
+  // const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
   const [amount, setAmount] = useState('');
@@ -21,28 +23,43 @@ const CampaignDetails = () => {
 
   const remainingDays = daysLeft(state.deadline);
 
-
-  const contract = true;
-  const address = true;
-
-  const fetchDonators = async () => {
-    // const data = await getDonations(state.pId);
-
-    // setDonators(data);
-  }
-
-  useEffect(() => {
-    if(contract) fetchDonators();
-  }, [contract, address])
+  const {
+    address,
+    isConnected,
+    provider,
+  } = useNetworkContext()
 
   const handleDonate = async () => {
     setIsLoading(true);
 
-    // await donate(state.pId, amount); 
+    try {
+      if(!isConnected || !address) throw Error("Connect a ETH wallet")
+      
+      const signer = await provider.getSigner();
+      await donate(signer, amount);
 
-    navigate('/')
+      setAmount('');
+      _fetchDonors();
+      const amountNow = await amountOf(state.campaign_id);
+      state.amountCollected = amountNow;
+
+      toast.success('Amount Sent !')
+    } catch(e) {
+      toast.error(e.message);
+    }
+
     setIsLoading(false);
   }
+
+  const _fetchDonors = async() => {
+    const donor = await fetchDonors(state.campaign_id);
+    setDonators(donor);
+  }
+
+  useEffect(() => {
+    _fetchDonors();
+  }, [])
+
 
   return (
     <div>
@@ -94,8 +111,8 @@ const CampaignDetails = () => {
               <div className="mt-[20px] flex flex-col gap-4">
                 {donators.length > 0 ? donators.map((item, index) => (
                   <div key={`${item.donator}-${index}`} className="flex justify-between items-center gap-4">
-                    <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-ll">{index + 1}. {item.donator}</p>
-                    <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-ll">{item.donation}</p>
+                    <p className="font-epilogue font-normal text-[16px] text-[#b2b3bd] leading-[26px] break-ll">{index + 1}. {item}</p>
+                    {/* <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] break-ll">{item.donation}</p> */}
                   </div>
                 )) : (
                   <p className="font-epilogue font-normal text-[16px] text-[#808191] leading-[26px] text-justify">No donators yet. Be the first one!</p>

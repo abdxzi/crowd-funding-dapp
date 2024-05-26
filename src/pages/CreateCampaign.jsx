@@ -9,7 +9,6 @@ import {
 import { 
   checkIfImage, 
   pinJson,
-  getCamapaignList,
   createCampaignFcn
 } from '@utils/index';
 
@@ -24,7 +23,6 @@ const CreateCampaign = () => {
   const {
     address,
     isConnected,
-    chainId,
     provider,
   } = useNetworkContext()
 
