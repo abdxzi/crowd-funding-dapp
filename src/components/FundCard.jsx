@@ -1,14 +1,27 @@
 import React from 'react';
 
-import { tagType, thirdweb } from '../assets';
+import { tagType, thirdweb, edit } from '../assets';
 import { daysLeft } from '../utils';
 
-const FundCard = ({ owner, title, description, target, deadline, amountCollected, image, handleClick }) => {
+const FundCard = ({ owner, title, description, target, deadline, amountCollected, image, handleClick, isProfile }) => {
   const remainingDays = daysLeft(deadline);
   
   return (
-    <div className="sm:w-[288px] w-full rounded-[15px] bg-[#1c1c24] cursor-pointer" onClick={handleClick}>
-      <img src={image} alt="fund" className="w-full h-[158px] object-cover rounded-[15px]"/>
+    <div 
+      className="sm:w-[288px] w-full rounded-[15px] bg-[#1c1c24] cursor-pointer fundCard" 
+      onClick={handleClick}
+      onMouseEnter={(e) => isProfile ? e.currentTarget.querySelector('img').style.filter = 'blur(2px)':null}
+      onMouseLeave={(e) => isProfile ? e.currentTarget.querySelector('img').style.filter = '' : null}
+    >
+      <div className="relative w-full h-[158px] bg-yellow">
+        <img src={image} alt="fund" className="w-full h-[158px] object-cover rounded-[15px]"/>
+        {isProfile ? 
+          <img 
+            src={edit} 
+            className='w-[40px] h-[40px] absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 editIcon'
+          /> 
+        : null}
+      </div>
 
       <div className="flex flex-col p-4">
         {/* <div className="flex flex-row items-center mb-[18px]">

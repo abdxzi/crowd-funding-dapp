@@ -15,6 +15,8 @@ import loader from './images/loader.svg';
 import thirdweb from './images/thirdweb.png';
 import settings from './images/settings.svg'
 
+import edit from './images/edit.svg'
+
 export {
   tagType,
   createCampaign,
@@ -30,5 +32,6 @@ export {
   money,
   loader,
   thirdweb,
-  settings
+  settings,
+  edit
 };

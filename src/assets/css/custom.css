@@ -1,0 +1,7 @@
+.editIcon {
+    display: none;
+}
+
+.fundCard:hover .editIcon {
+    display: block;
+}

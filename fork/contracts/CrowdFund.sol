@@ -29,7 +29,7 @@ contract CrowdFund {
     event CampaignCreated(address indexed by, uint256 indexed campaign_id, string cid);
     event CampaignUpdated(address indexed by, uint256 indexed campaign_id, string newCid);
     event FundRecieved(address indexed from, address indexed to, uint256 amount, uint256 indexed campaign_id);
-    event FundWithdrawed(address indexed by, uint256 amount);
+    event FundWithdrawed(address indexed by, uint256 amount, address to);
 
     mapping(uint256 => Campaign) campaigns;
 
@@ -107,12 +107,14 @@ contract CrowdFund {
         campaigns[_campaignId].state = campaignState.STARTED;
     }
 
-    function withdrawFund(uint256 amount) external{
+    function withdrawFund(address _address, uint256 amount) external{
         require(balanceOf[msg.sender] > amount, "Insufficient Balance");
 
-        (bool success,) = payable(msg.sender).call{value: amount}("");
+        (bool success,) = payable(_address).call{value: amount}("");
         require(success, "TRANSACTION FAILED");
 
-        emit FundWithdrawed(msg.sender, amount);
+        balanceOf[msg.sender] -= amount;
+
+        emit FundWithdrawed(msg.sender, amount, _address);
     }
 }

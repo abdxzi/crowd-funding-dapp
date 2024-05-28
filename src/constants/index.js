@@ -12,25 +12,25 @@ export const navlinks = [
     link: '/create-campaign',
   },
   {
-    name: 'withdraw',
-    imgUrl: withdraw,
-    link: '/',
-    disabled: true,
-  },
-  {
     name: 'profile',
     imgUrl: profile,
     link: '/profile',
   },
   {
+    name: 'withdraw',
+    imgUrl: withdraw,
+    link: '/withdraw',
+  },
+  {
     name: 'settings',
     imgUrl: settings,
-    // link: '/',
+    disabled: true,
+
   },
   {
     name: 'logout',
     imgUrl: logout,
     link: '/',
-    // disabled: true,
+    disabled: true,
   },
 ];

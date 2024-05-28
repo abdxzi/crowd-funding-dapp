@@ -1,32 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 import { DisplayCampaigns } from '../components';
-import { 
-  getCamapaignList,
-  getCamapignData, 
-  getAmountCollected
-} from '@utils/index';
+import { useCampaignContext } from '@context';
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [campaigns, setCampaigns] = useState([]);
 
-  const fetchCampaigns = async () => {
-    setIsLoading(true);
-
-    const campaign_list = await getCamapaignList();
-
-    const raisedAmount = await getAmountCollected(campaign_list);
-    const metadata = await getCamapignData(campaign_list, raisedAmount);
-
-    setCampaigns(metadata);
-    setIsLoading(false);
-  }
-  
-  console.log(campaigns)
+  const { 
+    fetchCampaigns,
+    campaigns
+  } = useCampaignContext()
 
   useEffect(() => {
-    fetchCampaigns();
+    setIsLoading(true);
+    if(campaigns.length == 0) fetchCampaigns();
+    setIsLoading(false);
   }, []);
 
   return (
@@ -34,6 +22,7 @@ const Home = () => {
       title="All Campaigns"
       isLoading={isLoading}
       campaigns={campaigns}
+      isProfile={false}
     />
   )
 }

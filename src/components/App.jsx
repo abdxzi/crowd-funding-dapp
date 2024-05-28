@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Sidebar, Navbar } from '@components';
-import { CampaignDetails, CreateCampaign, Home, Profile, EditCreateCampaign } from '@pages/index';
+import { CampaignDetails, CreateCampaign, Home, Profile, EditCampaign, WithrawFund } from '@pages/index';
 
 // WEB3MODAL
 import { modalConfig } from '@config'
@@ -23,6 +23,8 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/create-campaign" element={<CreateCampaign />} />
           <Route path="/campaign-details/:id" element={<CampaignDetails />} />
+          <Route path="/update-campaign" element={<EditCampaign />} />
+          <Route path="/withdraw" element={<WithrawFund />} />
         </Routes>
       </div>
     </div>

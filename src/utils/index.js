@@ -55,5 +55,5 @@ export {
   getAmountCollected,
   fetchDonors,
   donate,
-  amountOf
+  amountOf,
 }

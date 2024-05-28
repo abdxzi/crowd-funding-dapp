@@ -10,7 +10,10 @@ import {
   donate,
   amountOf
 } from '@utils/index';
-import { useNetworkContext } from '@context/index';
+import { 
+  useNetworkContext,
+  useCampaignContext
+} from '@context/index';
 import { toast } from 'react-hot-toast';
 
 const CampaignDetails = () => {
@@ -29,6 +32,12 @@ const CampaignDetails = () => {
     provider,
   } = useNetworkContext()
 
+  const {
+    fetchCampaigns
+  } = useCampaignContext()
+
+  // console.log(state)
+
   const handleDonate = async () => {
     setIsLoading(true);
 
@@ -43,12 +52,15 @@ const CampaignDetails = () => {
       const amountNow = await amountOf(state.campaign_id);
       state.amountCollected = amountNow;
 
+      fetchCampaigns();
+
       toast.success('Amount Sent !')
     } catch(e) {
       toast.error(e.message);
     }
 
     setIsLoading(false);
+    // modifyCampaignState(state.campaign_id, "amountCollected", parseFloat(state.amountCollected) + parseFloat(amount))
   }
 
   const _fetchDonors = async() => {

@@ -4,11 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import FundCard from './FundCard';
 import { loader } from '../assets';
 
-const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
+const DisplayCampaigns = ({ title, isLoading, campaigns, isProfile }) => {
   const navigate = useNavigate();
 
-  const handleNavigate = (campaign) => {
+  const handleCardDetailsNavigation = (campaign) => {
     navigate(`/campaign-details/${campaign.title}`, { state: campaign })
+  }
+
+  const handleCardEditNavigation = (campaign) => {
+    navigate(`/update-campaign`, { state: campaign })
   }
   
   return (
@@ -29,7 +33,8 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
         {!isLoading && campaigns.length > 0 && campaigns.map((campaign, i) => <FundCard 
           key={i}
           {...campaign}
-          handleClick={() => handleNavigate(campaign)}
+          handleClick={() => isProfile ? handleCardEditNavigation(campaign) :  handleCardDetailsNavigation(campaign)}
+          isProfile={isProfile}
         />)}
       </div>
     </div>

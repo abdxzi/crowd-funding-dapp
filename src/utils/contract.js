@@ -24,37 +24,69 @@ const createCampaignFcn = async (provider, _cid) => {
 }
 
 const getCamapaignList = async () => {
-    const event_abi = [
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, providerPublic);
+    const event_created_abi = [
         "event CampaignCreated(address indexed by, uint256 indexed campaign_id, string cid)"
     ];
 
-    const filter = {
+    const event_updated_abi = [
+        "event CampaignUpdated(address indexed by, uint256 indexed campaign_id, string newCid)"
+    ];
+
+    const created_filter = {
         address: CONTRACT_ADDRESS,
         topics: [
             ethers.id("CampaignCreated(address,uint256,string)")
         ]
     };
+    const updated_filter = {
+        address: CONTRACT_ADDRESS,
+        topics: [
+            ethers.id("CampaignUpdated(address,uint256,string)")
+        ]
+    };
 
-    const logs = await providerPublic.getLogs({
-        filter,
+    const created_logs = await providerPublic.getLogs({
+        created_filter,
         fromBlock: 0,
         toBlock: 'latest'
     });
 
-    const iface = new ethers.Interface(event_abi);
+    const updated_logs = await providerPublic.getLogs({
+        updated_filter,
+        fromBlock: 0,
+        toBlock: 'latest'
+    });
 
-    let campaigns = []
+    const created_iface = new ethers.Interface(event_created_abi);
+    const updated_iface = new ethers.Interface(event_updated_abi);
 
-    logs.map((log) => {
-        const e = iface.parseLog(log);
+    let campaigns = [];
+
+    created_logs.map((log) => {
+        const e = created_iface.parseLog(log);
         if(e) campaigns.push({
             createdBy: e.args.by,
             cid: e.args.cid,
             campaign_id: e.args.campaign_id
         })
+    });
 
-        // console.log(e);
-    })
+    let updates = []
+    updated_logs.map((log)=> {
+        const e = updated_iface.parseLog(log);
+        if(e) updates.push(e.args.campaign_id)
+    });
+
+    updates = [...new Set(updates)]
+    updates.forEach(async id => {
+        const newCid = await contract.getCampaignCID(id);
+
+        console.log(newCid)
+        const _camp = campaigns.find(campaign => campaign.campaign_id === id);
+
+        _camp.cid = newCid;
+    });
 
     return campaigns;
 }
@@ -112,12 +144,20 @@ const amountOf = async (campaign_id) => {
     return ethers.formatEther(amount);
 } 
 
+const updateCampaign = async (provider, campaign_id, _cid) => {
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
+    const tx = await contract.updateCampaignCID(campaign_id, _cid);
+    const reciept = await tx.wait();
+    return reciept.status
+}
+
 export {
     createCampaignFcn,
     getCamapaignList,
-    // getCampaignsOfAddress,
     getAmountCollected,
     fetchDonors,
     donate,
-    amountOf
+    amountOf,
+    updateCampaign
 }
