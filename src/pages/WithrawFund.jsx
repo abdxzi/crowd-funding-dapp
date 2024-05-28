@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 
 import { CustomButton, FormField, Loader } from '../components';
-import { checkIfImage } from '../utils';
-import { pinJson } from '../utils/pinata';
-import {
-  updateCampaign
-} from '../utils/contract';
-import { useNetworkContext,
-  useCampaignContext } from "@context/index";
+
+import { 
+  useNetworkContext,
+  useCampaignContext 
+} from "@context/index";
 import { toast } from 'react-hot-toast';
+
+import { withrawETHToAddress } from '@utils/index';
+import { transaction_history } from '@assets/index';
 
 const WithrawFund = () => {
 
@@ -21,7 +22,6 @@ const WithrawFund = () => {
     isConnected,
     chainId,
     provider,
-    signer
   } = useNetworkContext()
 
   const {
@@ -49,11 +49,14 @@ const WithrawFund = () => {
     try {
       setIsLoading(true);
 
-      //  Create Campaign Here
-      const now = new Date()
-    
-      setIsLoading(false);
-      // navigate('/profile')
+      const withdrawed = await withrawETHToAddress(provider, form.address, form.amount);
+
+      if(withdrawed) {
+        toast.success("Withdrawal success !");
+        setIsLoading(false);
+      } else {
+        throw Error("Withdrawal Failed !")
+      }
     } catch (e) {
       toast.error(e.message);
       setIsLoading(false);
@@ -61,8 +64,13 @@ const WithrawFund = () => {
   }
 
   return (
-    <div className="bg-[#1c1c24] flex justify-center items-center flex-col rounded-[10px] sm:p-10 p-4">
+    <div className="bg-[#1c1c24] flex justify-center items-center flex-col rounded-[10px] sm:p-10 p-4 relative">
       {isLoading && <Loader />}
+      <div className='flex'>
+        <Link to="/withdrawal-history">
+          <img src={transaction_history} className='absolute w-[30px] h-[30px] right-[20px] top-[20px]' />
+        </Link>
+      </div>
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#3a3a43] rounded-[10px]">
         <h1 className="font-epilogue font-bold sm:text-[25px] text-[18px] leading-[38px] text-white">Withdraw Raised Amount</h1>
       </div>

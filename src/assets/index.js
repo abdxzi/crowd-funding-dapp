@@ -14,8 +14,10 @@ import money from './images/money.svg';
 import loader from './images/loader.svg';
 import thirdweb from './images/thirdweb.png';
 import settings from './images/settings.svg'
+import connect from './images/connect.svg'
 
 import edit from './images/edit.svg'
+import transaction_history from './images/history.svg'
 
 export {
   tagType,
@@ -33,5 +35,7 @@ export {
   loader,
   thirdweb,
   settings,
-  edit
+  edit,
+  connect,
+  transaction_history
 };

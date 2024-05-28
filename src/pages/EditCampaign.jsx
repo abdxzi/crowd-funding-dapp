@@ -13,7 +13,6 @@ import { toast } from 'react-hot-toast';
 
 const CreateCampaign = () => {
 
-
   const navigate = useNavigate();
   const { state } = useLocation();
   const [isLoading, setIsLoading] = useState(false);

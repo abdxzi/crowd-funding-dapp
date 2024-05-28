@@ -5,7 +5,9 @@ import {
   getAmountCollected, 
   fetchDonors,
   donate,
-  amountOf
+  amountOf,
+  withrawETHToAddress,
+  raisedAmountBalance
 } from "./contract";
 
 const _gateway = import.meta.env.VITE_IPFS_GATEWAY;
@@ -56,4 +58,6 @@ export {
   fetchDonors,
   donate,
   amountOf,
+  withrawETHToAddress,
+  raisedAmountBalance
 }

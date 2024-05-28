@@ -152,6 +152,35 @@ const updateCampaign = async (provider, campaign_id, _cid) => {
     return reciept.status
 }
 
+const raisedAmountBalance = async (provider) => {
+    const signer = await provider.getSigner();
+
+    console.log();
+
+    // const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
+    
+    // const amount = ethers.parseEther(_amount);
+    // const tx = await contract.withdrawFund(address, amount);
+
+    // const reciept = await tx.wait();
+    // return reciept.status;
+}
+
+const withrawETHToAddress = async (provider, address, _amount) => {
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
+    
+    const amount = ethers.parseEther(_amount);
+    const tx = await contract.withdrawFund(address, amount);
+
+    const reciept = await tx.wait();
+    return reciept.status;
+}
+
+const fetchWithdrawals = () => {
+    
+}
+
 export {
     createCampaignFcn,
     getCamapaignList,
@@ -159,5 +188,7 @@ export {
     fetchDonors,
     donate,
     amountOf,
-    updateCampaign
+    updateCampaign,
+    withrawETHToAddress,
+    raisedAmountBalance
 }
