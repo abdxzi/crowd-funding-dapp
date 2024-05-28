@@ -1,2 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+.env
+node_modules
+pnpm-lock.yaml
+
+# Hardhat files
+fork/node_modules
+fork/cache
+fork/artifacts
+fork/ignition/deployments/chain-31337
