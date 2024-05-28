@@ -45,7 +45,7 @@ const CampaignDetails = () => {
       if(!isConnected || !address) throw Error("Connect a ETH wallet")
       
       const signer = await provider.getSigner();
-      await donate(signer, amount);
+      await donate(signer, state.campaign_id,amount);
 
       setAmount('');
       _fetchDonors();

@@ -16,7 +16,7 @@ const getNetworkBalance = async (walletProvider, address) => {
     const provider = new ethers.BrowserProvider(walletProvider);
     const signer = await provider.getSigner();
 
-    console.log(await provider.getBalance(address))
+    // console.log(await provider.getBalance(address))
 
     // const balHex = await signer.getBalance();
     // const balance = parseFloat(ethers.utils.formatUnits(balHex)).toFixed(3);

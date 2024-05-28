@@ -65,7 +65,7 @@ const getCamapaignList = async () => {
 
     created_logs.map((log) => {
         const e = created_iface.parseLog(log);
-        if(e) campaigns.push({
+        if (e) campaigns.push({
             createdBy: e.args.by,
             cid: e.args.cid,
             campaign_id: e.args.campaign_id
@@ -73,9 +73,9 @@ const getCamapaignList = async () => {
     });
 
     let updates = []
-    updated_logs.map((log)=> {
+    updated_logs.map((log) => {
         const e = updated_iface.parseLog(log);
-        if(e) updates.push(e.args.campaign_id)
+        if (e) updates.push(e.args.campaign_id)
     });
 
     updates = [...new Set(updates)]
@@ -127,22 +127,24 @@ const fetchDonors = async (campaign_id) => {
     return uniq;
 }
 
-const donate = async (signer, _amount) => {
+const donate = async (signer, campaign_id, _amount) => {
     console.log(signer)
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
 
+    console.log(campaign_id, _amount)
+
     const amountToSend = ethers.parseEther(_amount);
-    const tx = await contract.donate(BigInt(1), { value: amountToSend });
+    const tx = await contract.donate(BigInt(campaign_id), { value: amountToSend });
 
     tx.wait();
 }
 
 const amountOf = async (campaign_id) => {
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, providerPublic);
-    
+
     const amount = await contract.amountOf(campaign_id);
     return ethers.formatEther(amount);
-} 
+}
 
 const updateCampaign = async (provider, campaign_id, _cid) => {
     const signer = await provider.getSigner();
@@ -152,24 +154,19 @@ const updateCampaign = async (provider, campaign_id, _cid) => {
     return reciept.status
 }
 
-const raisedAmountBalance = async (provider) => {
-    const signer = await provider.getSigner();
+const raisedAmountBalance = async (address) => {
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, providerPublic);
 
-    console.log();
+    const balance = await contract.balanceOf(address);
+    const balance_ether = ethers.formatEther(balance);
 
-    // const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
-    
-    // const amount = ethers.parseEther(_amount);
-    // const tx = await contract.withdrawFund(address, amount);
-
-    // const reciept = await tx.wait();
-    // return reciept.status;
+    return balance_ether
 }
 
 const withrawETHToAddress = async (provider, address, _amount) => {
     const signer = await provider.getSigner();
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
-    
+
     const amount = ethers.parseEther(_amount);
     const tx = await contract.withdrawFund(address, amount);
 
@@ -177,8 +174,40 @@ const withrawETHToAddress = async (provider, address, _amount) => {
     return reciept.status;
 }
 
-const fetchWithdrawals = () => {
-    
+const fetchWithdrawals = async (address) => {
+    // const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, providerPublic);
+    const event_abi = [
+        "event FundWithdrawed(address indexed by, uint256 amount, address to)"
+    ];
+
+    const filter = {
+        address: CONTRACT_ADDRESS,
+        topics: [
+            ethers.id("FundWithdrawed(address,uint256,address)")
+        ]
+    };
+
+    const logs = await providerPublic.getLogs({
+        filter,
+        fromBlock: 0,
+        toBlock: 'latest'
+    });
+
+    const iface = new ethers.Interface(event_abi);
+
+    let withdraws = [];
+
+    logs.map((log) => {
+        const e = iface.parseLog(log);
+        if (e) withdraws.push({
+            owner: e.args.by,
+            amount: ethers.formatEther(e.args.amount),
+            to: e.args.to
+        })
+    });
+
+    const res = withdraws.filter( log => log.owner == address)
+    return res
 }
 
 export {
@@ -190,5 +219,6 @@ export {
     amountOf,
     updateCampaign,
     withrawETHToAddress,
-    raisedAmountBalance
+    raisedAmountBalance,
+    fetchWithdrawals
 }
