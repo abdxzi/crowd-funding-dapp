@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-import CONTRACT_ABI from "../../fork/artifacts/contracts/CrowdFund.sol/CrowdFund.json"
+import CONTRACT_ABI from "./abi/CrowdFund.json"
 import { toast } from "react-hot-toast";
 import { fetchAllWithdrawals, fetchCampaignList, insertToTable, updateTable } from "./database";
 
