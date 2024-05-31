@@ -1,26 +1,60 @@
-# React + Vite
+<div style="display:flex; justify-content:center; gap: 10px">
+<img src="https://img.shields.io/badge/react%20-%2320232a.svg?&style=for-the-badge&logo=react&logoColor=%2361DAFB"/>
+<img src="https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" />
+<img src="https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=Ethereum&logoColor=white" />
+<img src="https://files.readme.io/51627ed-image.png" height="30px" />
+<img src="https://a11ybadges.com/badge?logo=ipfs" />
+</div>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Crowd Funding dApp
 
-Currently, two official plugins are available:
+This is a decentralised application craeted in React for Crowd Funding of Web3 Projects. In this app anyone can create crowd funding campaigns and collect fund in ETHEREUM with complete transparency and security.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+App Frontend is in `ReactJS` and contracts are written in `solidity` and tested with `hardhat`. `IPFS` (InterPlanetary File System) is used to store the campaign meta data. For fast client side data fetching ipfs cid of campaigns are storted in `Supabase`
 
+This project is created for Alchemy Ethereum bootcamp.
+
+## Live Demo
+<a href="https://crowd-funding-dapp-eta.vercel.app/" target="_blank"><img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" /></a>
+
+Contracts are deployed in Sepolia Testnet at: `0xA840114c4c7B1f8aaF19c5f6e005A89F8853262a`
+
+## Features
+
+✔️ Create Crowd Funding Camapaigns <br>
+✔️ Collect Fund in ETH from donors <br>
+✔️  Edit Campaigm Metadata <br>
+✔️  See withdrawal History <br>
+
+## Getting Started
+
+1. Clone this project, `cd` into project root directory
+2. `pnpm install` to download all the project dependencies.
+3. Create an empty `.env` file in root directory.
+4. Run `pnpm run dev` to start the app
 
 ```
-Uncaught (in promise) Error: could not coalesce error (error={ "code": -32602, "message": "Log response size exceeded. You can make eth_getLogs requests with up to a 2K block range and no limit on the response size, or you can request any block range with a cap of 10K logs in the response. Based on your parameters and the response size limit, this block range should work: [0x6, 0x1311f1]" }, payload={ "id": 2, "jsonrpc": "2.0", "method": "eth_getLogs", "params": [ { "fromBlock": "0x6", "toBlock": "latest" } ] }, code=UNKNOWN_ERROR, version=6.12.1)
-    at makeError (chunk-RMLFIK6Q.js?v=6ab7f531:325:15)
-    at JsonRpcProvider.getRpcError (chunk-RMLFIK6Q.js?v=6ab7f531:19088:12)
-    at chunk-RMLFIK6Q.js?v=6ab7f531:19222:27
+VITE_RPC_URL=
+VITE_CONTRACT_ADDRESS=
+VITE_PINATA_JWT=
+VITE_IPFS_GATEWAY=
+VITE_SUPABASE_PROJECT=
+VITE_SUPABASE_ANON_KEY=
 ```
 
+## Local testnet
+You can use `hardhat node` to test the dapp locally. Hardhat and contracts are present in `fork` directory.
 
-```
-CREATE TABLE campaigns (
-    id SERIAL PRIMARY KEY,
-    campaign_id BIGINT NOT NULL,
-    cid VARCHAR(255) NOT NULL,
-    createdBy TEXT NOT NULL
-);
-```
+1. Uncomment the hardhat network at `src\config\modalNetworks.js`
+2. Add hardhat to Browser Wallet.
+3. Insytall dependencies `cd fork && pnpm install`
+4. Start local testnet using `npx hardhat node`
+5. Update `.env`
+6. Use `fork/scripts` for deployment and testing
+
+**⚠️ Note**
+
+> Never put sensitive piece of data in client side. If we were\
+> building an enterprise app to conquer the world we would never place\
+> this sensitive data in the client code of our blockexplorer project that\
+> could potentially be read by anyone.

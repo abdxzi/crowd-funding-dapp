@@ -1,18 +1,27 @@
-# Sample Hardhat Project
+# Hardhat Project
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+Solidity contracts can be found in `contracts`
 
-Try running some of the following tasks:
+- `Contracts` - directory contains solidity contracts
+- `scripts`   - Helpful scripts for testing
+- `test` - Smart contract test scripts
 
+To start local testnet:
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
 npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.js
+```
+
+To run tests:
+```shell
+npx hardhat test
+```
+
+To run scripts:
+```shell
+npx hardhat run [script]
 ```
 
 
 ## Contract Deployed
 
-Sepolia `0xc0BeC168bc835dc4cbE43948C4523987CF873e31`
+Contract CrowdFund is deployed at [Sepolia](https://sepolia.etherscan.io/address/0xA840114c4c7B1f8aaF19c5f6e005A89F8853262a): `0xA840114c4c7B1f8aaF19c5f6e005A89F8853262a`
