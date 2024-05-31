@@ -39,5 +39,5 @@ export const networks = [
     // mainnet, 
     // polygonAmoy, 
     sepolia, 
-    hardhat
+    // hardhat
 ]
