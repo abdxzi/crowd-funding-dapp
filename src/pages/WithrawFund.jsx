@@ -58,15 +58,11 @@ const WithrawFund = () => {
 
       setIsLoading(true);
 
-      const withdrawed = await withrawETHToAddress(provider, form.address, form.amount);
-
-      if(withdrawed) {
-        toast.success("Withdrawal success !");
-        fetchBalance();
-        setIsLoading(false);
-      } else {
-        throw Error("Withdrawal Failed !")
-      }
+      await withrawETHToAddress(provider, form.address, form.amount);
+      
+      toast.success("Withdrawal success !");
+      fetchBalance();
+      setIsLoading(false);
     } catch (e) {
       toast.error(e.message);
       setIsLoading(false);

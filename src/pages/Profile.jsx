@@ -21,15 +21,14 @@ const Profile = () => {
   } = useNetworkContext()
 
   useEffect(() => {
-    console.log(campaigns)
     if (campaigns.length == 0 && isConnected) fetchCampaigns();
   }, [address]);
 
   useEffect(() => {
-    setMyCampaigns(campaigns.filter((campaign) => campaign.createdBy == address));
+    setMyCampaigns(campaigns.filter((campaign) => campaign.createdby == address));
   }, [campaigns, address])
 
-  console.log("LOKKK", myCampaigns)
+
 
   return (
     <>

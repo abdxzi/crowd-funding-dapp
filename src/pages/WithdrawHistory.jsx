@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
-
+import { formatEther } from "ethers";
 import { Loader } from '../components';
 
 import {
@@ -61,8 +60,8 @@ const WithrawalHistory = () => {
                       return (
                         <tr className="text-white border-b" key={i}>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">{i + 1}</td>
-                          <td className="text-sm text-white font-light px-6 py-4 whitespace-nowrap">{transaction.amount} ETH</td>
-                          <td className="text-sm text-white font-light px-6 py-4 whitespace-nowrap">{transaction.to}</td>
+                          <td className="text-sm text-white font-light px-6 py-4 whitespace-nowrap">{formatEther(transaction.amount.toString())} ETH</td>
+                          <td className="text-sm text-white font-light px-6 py-4 whitespace-nowrap">{transaction.recievedby}</td>
                         </tr>
                       )
                     })

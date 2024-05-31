@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 
 import CONTRACT_ABI from "../../fork/artifacts/contracts/CrowdFund.sol/CrowdFund.json"
 import { toast } from "react-hot-toast";
+import { fetchAllWithdrawals, fetchCampaignList, insertToTable, updateTable } from "./database";
 
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
 const RPC_URL = import.meta.env.VITE_RPC_URL;
@@ -11,93 +12,43 @@ const providerPublic = new ethers.JsonRpcProvider(RPC_URL);
 
 const createCampaignFcn = async (provider, _cid) => {
     const signer = await provider.getSigner();
-    // console.log(signer, _cid, CONTRACT_ADDRESS)
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
 
+    const event_abi = [
+        "event CampaignCreated(address indexed by, uint256 indexed campaign_id, string cid)"
+    ];
+
+    const iface = new ethers.Interface(event_abi);
+
+
     try {
-        await contract.createCampaign(_cid);
+        const tx = await contract.createCampaign(_cid);
+        const reciept = await tx.wait();
+
+        const eventLog = reciept.logs[0];
+        const _campaign_id = eventLog.args.campaign_id;
+        const _campaign_cid = eventLog.args.cid;
+        const _creator = eventLog.args.by;
+        // console.log("created id", _campaign_id);
+
+        // Add to database
+        await insertToTable('campaigns', { campaign_id: _campaign_id.toString(), cid: _campaign_cid, createdby: _creator });
+        // console.log(db_data);
 
         toast.success("Campaign Created Successfuly")
     } catch (e) {
+        console.log(e.message)
         toast.error("Transaction Failed")
     }
 }
 
 const getCamapaignList = async () => {
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, providerPublic);
-    const event_created_abi = [
-        "event CampaignCreated(address indexed by, uint256 indexed campaign_id, string cid)"
-    ];
 
-    const event_updated_abi = [
-        "event CampaignUpdated(address indexed by, uint256 indexed campaign_id, string newCid)"
-    ];
-
-    const created_filter = {
-        address: CONTRACT_ADDRESS,
-        topics: [
-            ethers.id("CampaignCreated(address,uint256,string)")
-        ]
-    };
-    const updated_filter = {
-        address: CONTRACT_ADDRESS,
-        topics: [
-            ethers.id("CampaignUpdated(address,uint256,string)")
-        ]
-    };
-
-    const created_logs = await providerPublic.getLogs({
-        created_filter,
-        fromBlock: 0,
-        toBlock: 'latest'
-    });
-
-    const updated_logs = await providerPublic.getLogs({
-        updated_filter,
-        fromBlock: 0,
-        toBlock: 'latest'
-    });
-
-    const created_iface = new ethers.Interface(event_created_abi);
-    const updated_iface = new ethers.Interface(event_updated_abi);
-
-    let campaigns = [];
-
-    created_logs.map((log) => {
-        const e = created_iface.parseLog(log);
-        if (e) campaigns.push({
-            createdBy: e.args.by,
-            cid: e.args.cid,
-            campaign_id: e.args.campaign_id
-        })
-    });
-
-    let updates = []
-    updated_logs.map((log) => {
-        const e = updated_iface.parseLog(log);
-        if (e) updates.push(e.args.campaign_id)
-    });
-
-    updates = [...new Set(updates)]
-    updates.forEach(async id => {
-        const newCid = await contract.getCampaignCID(id);
-
-        console.log(newCid)
-        const _camp = campaigns.find(campaign => campaign.campaign_id === id);
-
-        _camp.cid = newCid;
-    });
+    const campaigns = await fetchCampaignList('campaigns');
+    if (!campaigns) return []
 
     return campaigns;
 }
-
-// const getCampaignsOfAddress = async (creator, signer) => {
-//     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
-
-//     const res = await contract.getCampaignIDs(creator);
-//     console.log(res);
-// }
-
 
 const getAmountCollected = async (campaigns) => {
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, providerPublic);
@@ -151,7 +102,13 @@ const updateCampaign = async (provider, campaign_id, _cid) => {
     const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, signer);
     const tx = await contract.updateCampaignCID(campaign_id, _cid);
     const reciept = await tx.wait();
-    return reciept.status
+
+    // Updates the new CID in db obtained after smartcontract success execution
+    const eventLog = reciept.logs[0];
+    const _newCid = eventLog.args.newCid;
+    const _campaign_id = eventLog.args.campaign_id;
+
+    await updateTable('campaigns', {cid: _newCid}, {campaign_id: _campaign_id.toString()});
 }
 
 const raisedAmountBalance = async (address) => {
@@ -171,43 +128,18 @@ const withrawETHToAddress = async (provider, address, _amount) => {
     const tx = await contract.withdrawFund(address, amount);
 
     const reciept = await tx.wait();
-    return reciept.status;
+
+    const eventLog = reciept.logs[0];
+    const _by = eventLog.args.by;
+    const _am = eventLog.args.amount;
+    const _to = eventLog.args.to;
+
+    await insertToTable('withdrawals', {address: _by, amount: _am.toString(), recievedby: _to});
 }
 
 const fetchWithdrawals = async (address) => {
-    // const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI.abi, providerPublic);
-    const event_abi = [
-        "event FundWithdrawed(address indexed by, uint256 amount, address to)"
-    ];
-
-    const filter = {
-        address: CONTRACT_ADDRESS,
-        topics: [
-            ethers.id("FundWithdrawed(address,uint256,address)")
-        ]
-    };
-
-    const logs = await providerPublic.getLogs({
-        filter,
-        fromBlock: 0,
-        toBlock: 'latest'
-    });
-
-    const iface = new ethers.Interface(event_abi);
-
-    let withdraws = [];
-
-    logs.map((log) => {
-        const e = iface.parseLog(log);
-        if (e) withdraws.push({
-            owner: e.args.by,
-            amount: ethers.formatEther(e.args.amount),
-            to: e.args.to
-        })
-    });
-
-    const res = withdraws.filter( log => log.owner == address)
-    return res
+    const withdraws =  await fetchAllWithdrawals(address);
+    return withdraws;
 }
 
 export {

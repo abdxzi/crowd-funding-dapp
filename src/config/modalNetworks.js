@@ -11,13 +11,13 @@ const mainnet = {
     rpcUrl: 'https://cloudflare-eth.com'
 }
 
-// const polygonAmoy = {
-//     chainId: 80002,
-//     name: 'Polygon Amoy',
-//     currency: 'MATIC',
-//     explorerUrl: 'https://www.oklink.com/amoy',
-//     rpcUrl: 'https://rpc-amoy.polygon.technology'
-// }
+const polygonAmoy = {
+    chainId: 80002,
+    name: 'Polygon Amoy',
+    currency: 'MATIC',
+    explorerUrl: 'https://www.oklink.com/amoy',
+    rpcUrl: 'https://rpc-amoy.polygon.technology'
+}
 
 const sepolia = {
     chainId: 11155111,
@@ -36,8 +36,8 @@ const hardhat = {
 }
 
 export const networks = [
-    mainnet, 
+    // mainnet, 
     // polygonAmoy, 
-    // sepolia, 
+    sepolia, 
     hardhat
 ]

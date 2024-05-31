@@ -68,15 +68,10 @@ const CreateCampaign = () => {
       const ipfs = await pinJson(metadata);
       if (!ipfs.IpfsHash) throw Error("Metadata upload failed !")
 
-      const updated = await updateCampaign(provider, state.campaign_id, ipfs.IpfsHash);
-      // console.log(ipfs.IpfsHash, tx);
+      await updateCampaign(provider, state.campaign_id, ipfs.IpfsHash);
 
-      if(updated){
-        await fetchCampaigns();
-        toast.success("Campaign updated")
-      } else {
-        throw Error("Something Went Wrong !")
-      }
+      await fetchCampaigns();
+      toast.success("Campaign updated")
 
       setIsLoading(false);
       navigate('/profile')
