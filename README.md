@@ -14,6 +14,12 @@ App Frontend is in `ReactJS` and contracts are written in `solidity` and tested 
 
 This project is created for Alchemy Ethereum bootcamp.
 
+
+## Video
+https://github.com/abdxzi/crowd-funding-dapp/assets/41392849/570e7e46-f3db-47eb-9444-9d8b6eb53490
+
+
+
 ## Live Demo
 <a href="https://crowd-funding-dapp-eta.vercel.app/" target="_blank"><img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" /></a>
 
