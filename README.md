@@ -8,6 +8,10 @@
 
 # Crowd Funding dApp
 
+![Page 1](https://github.com/user-attachments/assets/71f6809d-fb00-4345-82d5-b5b2e85e0a90)
+![Page 2](https://github.com/user-attachments/assets/eee0c18d-8dce-47c9-9124-9f5f51f6a065)
+
+
 This is a decentralised application created in React for Crowd Funding of Web3 Projects. In this app anyone can create crowd funding campaigns and collect fund in ETHEREUM with complete transparency and security.
 
 App Frontend is in `ReactJS` and contracts are written in `solidity` and tested with `hardhat`. `IPFS` (InterPlanetary File System) is used to store the campaign meta data. For fast client side data fetching ipfs cid of campaigns are storted in `Supabase`
